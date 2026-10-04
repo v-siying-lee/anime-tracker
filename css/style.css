@@ -1,0 +1,294 @@
+/* css/style.css — 番剧追踪器全部样式（深色主题） */
+
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --accent: #667eea;
+  --accent-secondary: #764ba2;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --dot-size: 36px;
+  --dot-gap: 12px;
+}
+
+/* ========== 全局 ========== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+  color: var(--text-primary);
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+}
+
+.hidden { display: none !important; }
+
+/* 细窄深色滚动条 */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: #333a56; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4a5480; }
+
+/* ========== 导航栏 ========== */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; height: 64px;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0 24px;
+  background: rgba(26, 26, 46, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 100;
+}
+.nav-title {
+  font-size: 20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.nav-right { display: flex; gap: 10px; align-items: center; }
+#proxyStatus { font-size: 12px; color: #f5576c; }
+
+/* ========== 按钮 ========== */
+.btn {
+  padding: 8px 18px; border: none; border-radius: 8px;
+  color: #fff; font-size: 14px; cursor: pointer;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  transition: transform 0.2s;
+}
+.btn:hover { transform: scale(1.05); }
+.btn-secondary {
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ========== 主体布局 ========== */
+.main-container { display: flex; padding-top: 64px; height: 100vh; }
+.anime-list {
+  width: 320px; flex-shrink: 0; overflow-y: auto;
+  padding: 16px;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+.detail-panel { flex: 1; overflow-y: auto; padding: 32px; }
+
+/* ========== 左侧番剧卡片 ========== */
+.anime-card {
+  display: flex; gap: 12px;
+  padding: 12px; margin-bottom: 12px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+  animation: fadeIn 0.3s;
+}
+.anime-card:hover { border-color: rgba(102, 126, 234, 0.5); transform: translateY(-2px); }
+.anime-card.active { border-color: var(--accent); }
+
+.card-cover-wrap {
+  position: relative; width: 72px; height: 96px; flex-shrink: 0;
+  border-radius: 8px; overflow: hidden; background: #111;
+}
+.card-cover { width: 100%; height: 100%; object-fit: cover; }
+.card-cover-placeholder {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); font-size: 12px;
+}
+.card-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; justify-content: center; }
+.card-title { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* 卡片底部进度条 */
+.card-progress { height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+.card-progress-inner {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  transition: width 0.3s;
+}
+
+/* ========== 状态标签 ========== */
+.status-tag { display: inline-block; width: fit-content; padding: 2px 10px; border-radius: 10px; font-size: 12px; }
+.status-watching { background: rgba(102, 126, 234, 0.25); color: #8fa3f0; }
+.status-completed { background: rgba(72, 187, 120, 0.2); color: #68d391; }
+.status-plan { background: rgba(160, 160, 160, 0.15); color: var(--text-secondary); }
+
+/* ========== 空状态 ========== */
+.empty-state {
+  height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-secondary); font-size: 16px;
+}
+
+/* ========== 右侧详情区 ========== */
+.detail-content { max-width: 800px; animation: fadeIn 0.3s; }
+#detailCover {
+  width: 240px; border-radius: 12px; display: block;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  background: #111;
+}
+.detail-header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+#detailTitle { font-size: 24px; }
+#detailProgress { color: var(--text-secondary); margin: 8px 0 20px; }
+#detailStats { color: var(--text-secondary); font-size: 13px; line-height: 1.8; margin-bottom: 16px; }
+.delete-btn {
+  background: none; border: none; cursor: pointer;
+  color: #f5576c; font-size: 12px; opacity: 0.8;
+}
+.delete-btn:hover { opacity: 1; text-decoration: underline; }
+
+/* ========== 集数圆点矩阵 ========== */
+.episode-dots { display: flex; flex-wrap: wrap; gap: var(--dot-gap); margin-bottom: 24px; }
+.dot {
+  position: relative; overflow: hidden;
+  width: var(--dot-size); height: var(--dot-size);
+  border-radius: 50%;
+  border: 2px solid #555; background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; color: #fff;
+  cursor: pointer; user-select: none;
+  transition: transform 0.2s;
+}
+.dot:hover { transform: scale(1.2); }
+/* 已看：渐变填充 + 白色对勾（隐藏数字，用 ::after 画勾） */
+.dot.watched {
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  border: none;
+  font-size: 0;
+}
+.dot.watched::after { content: "✓"; font-size: 14px; color: #fff; }
+
+/* ========== 涟漪动画 ========== */
+.ripple {
+  position: absolute; width: 20px; height: 20px;
+  margin-left: -10px; margin-top: -10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  animation: ripple 0.6s ease-out forwards;
+}
+@keyframes ripple {
+  from { transform: scale(0); opacity: 1; }
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ========== Tooltip ========== */
+.tooltip {
+  position: fixed; z-index: 1000;
+  background: #0d0d1a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px; white-space: nowrap;
+  pointer-events: none;
+}
+
+/* ========== Confetti 庆祝彩带 ========== */
+.confetti {
+  position: fixed; top: -12px; z-index: 2000;
+  width: 10px; height: 10px; border-radius: 2px;
+  pointer-events: none;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  to { transform: translateY(110vh) rotate(720deg); }
+}
+
+/* ========== 模态框 ========== */
+.modal {
+  position: fixed; inset: 0; z-index: 500;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.modal.active { opacity: 1; pointer-events: auto; }
+.modal-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+.modal-content {
+  position: relative;
+  margin: 8vh auto; max-width: 520px;
+  background: rgba(22, 33, 62, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px; padding: 24px;
+  transform: translateY(20px);
+  transition: transform 0.25s;
+}
+.modal.active .modal-content { transform: translateY(0); }
+.modal-title { margin-bottom: 16px; font-size: 18px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 8px; }
+
+/* 表单输入框 */
+.form-input {
+  width: 100%; padding: 10px 12px; margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: var(--text-primary); font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.form-input:focus { border-color: var(--accent); }
+/* 选中搜索结果后字段短暂绿色高亮 */
+.form-input.field-filled { border-color: #48bb78; }
+
+.form-error { color: #f5576c; font-size: 13px; min-height: 18px; }
+
+/* ========== 搜索结果列表 ========== */
+.search-results { max-height: 260px; overflow-y: auto; margin-bottom: 12px; }
+.search-hint { color: var(--text-secondary); font-size: 13px; padding: 8px 4px; }
+.search-hint.error { color: #f5576c; }
+.search-item {
+  display: flex; gap: 12px; align-items: center;
+  padding: 8px; border-radius: 8px; cursor: pointer;
+  transition: background 0.2s;
+}
+.search-item:hover { background: rgba(255, 255, 255, 0.06); }
+.search-item img { width: 60px; height: 80px; object-fit: cover; border-radius: 6px; background: #111; flex-shrink: 0; }
+.search-item-title { font-size: 14px; margin-bottom: 4px; }
+.search-item-meta { font-size: 12px; color: var(--text-secondary); }
+
+/* ========== 完成庆祝弹窗 ========== */
+.completion-content { text-align: center; }
+#completionTitle {
+  font-size: 32px; margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--accent), #f093fb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+#completionInfo { color: var(--text-secondary); font-size: 14px; line-height: 2; margin-bottom: 20px; }
+.completion-anime { font-size: 18px; color: var(--text-primary); }
+
+/* ========== 动画 ========== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ========== 响应式：< 768px 左侧列表变抽屉 ========== */
+.toggle-list-btn {
+  display: none;
+  position: fixed; left: 12px; bottom: 16px; z-index: 300;
+  padding: 8px 16px; border: none; border-radius: 20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  color: #fff; font-size: 13px; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+@media (max-width: 768px) {
+  .anime-list {
+    position: fixed; left: 0; top: 64px; bottom: 0; z-index: 200;
+    background: var(--bg-primary);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+  .anime-list.open { transform: translateX(0); }
+  .toggle-list-btn { display: block; }
+  .detail-panel { padding: 16px; }
+  .nav-right .btn { padding: 6px 10px; font-size: 12px; }
+}

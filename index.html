@@ -1,0 +1,93 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>番剧追踪器</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- 顶部导航栏 -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <h1 class="nav-title">番剧追踪器</h1>
+    </div>
+    <div class="nav-right">
+      <button id="addAnimeBtn" class="btn">+ 添加番剧</button>
+      <button id="exportBtn" class="btn btn-secondary">导出数据</button>
+      <button id="importBtn" class="btn btn-secondary">导入数据</button>
+      <input type="file" id="importFileInput" accept=".json" hidden>
+    </div>
+  </nav>
+
+  <!-- 移动端列表切换按钮 -->
+  <button id="toggleListBtn" class="toggle-list-btn">☰ 列表</button>
+
+  <!-- 主体左右分栏 -->
+  <main class="main-container">
+    <!-- 左侧番剧卡片列表 -->
+    <aside id="animeList" class="anime-list"></aside>
+
+    <!-- 右侧详情面板 -->
+    <section id="detailPanel" class="detail-panel">
+      <div id="emptyState" class="empty-state">
+        <p>选择一部番剧开始记录</p>
+      </div>
+
+      <div id="detailContent" class="detail-content hidden">
+        <img id="detailCover" referrerpolicy="no-referrer" alt="封面">
+        <div class="detail-header">
+          <h2 id="detailTitle"></h2>
+          <span id="detailStatus" class="status-tag"></span>
+        </div>
+        <p id="detailProgress"></p>
+        <div id="episodeDots" class="episode-dots"></div>
+        <div id="detailStats"></div>
+        <button id="deleteAnimeBtn" class="delete-btn">删除这部番剧</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- 添加番剧模态框 -->
+  <div id="addModal" class="modal">
+    <div id="modalOverlay" class="modal-overlay"></div>
+    <div class="modal-content">
+      <h3 class="modal-title">添加番剧</h3>
+      <input type="text" id="searchInput" class="form-input" placeholder="输入番剧名称（部分名称即可），从豆瓣搜索…" autocomplete="off">
+      <div id="searchResults" class="search-results"></div>
+
+      <div class="manual-form">
+        <input type="text" id="formTitle" class="form-input" placeholder="标题">
+        <input type="text" id="formCover" class="form-input" placeholder="封面图片 URL">
+        <input type="number" id="formEpisodes" class="form-input" min="1" placeholder="总集数">
+      </div>
+      <p id="formError" class="form-error"></p>
+
+      <div class="modal-actions">
+        <button id="confirmAddBtn" class="btn">确认添加</button>
+        <button id="closeModalBtn" class="btn btn-secondary">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 完成庆祝弹窗 -->
+  <div id="completionModal" class="modal completion-modal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content completion-content">
+      <h3 id="completionTitle">🎉 恭喜看完！</h3>
+      <div id="completionInfo"></div>
+      <button id="closeCompletionBtn" class="btn">关闭</button>
+    </div>
+  </div>
+
+  <!-- 按依赖顺序引入 6 个 JS 模块 -->
+  <script src="js/storage.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/interaction.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
